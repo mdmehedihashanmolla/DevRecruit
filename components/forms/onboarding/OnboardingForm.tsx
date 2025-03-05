@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { UserTypeSelection } from "./UserTypeForm";
 import { CompanyForm } from "./CompanyForm";
+import { JobSeekerForm } from "./JobSeekerForm";
 
 type UserSelectionType = "company" | "jobSeeker" | null;
 export function OnboardingForm() {
@@ -24,7 +25,7 @@ export function OnboardingForm() {
         return userType === "company" ? (
           <CompanyForm/>
         ) : (
-          <p>User is a job seeker</p>
+          <JobSeekerForm/>
         );
       default:
         return null;

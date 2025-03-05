@@ -1,6 +1,7 @@
 import { OnboardingForm } from "@/components/forms/onboarding/OnboardingForm";
 import { prisma } from "../utils/db";
 import { redirect } from "next/navigation";
+import { requireUser } from "../utils/requireUser";
 
 
 async function checkIfOnboardingCompleted(userId: string) {
@@ -16,7 +17,10 @@ async function checkIfOnboardingCompleted(userId: string) {
     }
   }
   
-export default function OnboardingPage(){
+export default async function OnboardingPage(){
+    const session = await requireUser();
+
+  await checkIfOnboardingCompleted(session.id as string);
     return(
         <div className="min-h-screen w-screen flex flex-col items-center justify-center py-10">
             <OnboardingForm/>
