@@ -1,4 +1,4 @@
-import { Button } from "../ui/button";
+import { auth, signIn } from "@/app/utils/auth";
 import {
   Card,
   CardContent,
@@ -8,6 +8,8 @@ import {
 } from "../ui/card";
 import * as React from "react";
 import type { SVGProps } from "react";
+import { GeneralSubmitButton } from "../general/SubmitButton";
+import { redirect } from "next/navigation";
 const Github = (props: SVGProps<SVGSVGElement>) => (
   <svg
     viewBox="0 0 256 250"
@@ -51,7 +53,11 @@ const Google = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-export function LoginForm() {
+export async function LoginForm() {
+  const session = await auth();
+  if (session?.user) {
+    return redirect("/");
+  }
   return (
     <div className="flex flex-col gap-6">
       <Card>
@@ -63,17 +69,28 @@ export function LoginForm() {
         </CardHeader>
         <CardContent>
           <div className="flex flex-col gap-4">
-            <form>
-              <Button className=" w-full" variant={"outline"}>
-                <Github className="size-4" />
-                Login with Github
-              </Button>
+            <form
+              action={async () => {
+                "use server";
+                await signIn("github", {
+                  redirectTo: "/",
+                });
+              }}
+            >
+              <GeneralSubmitButton
+                width="w-full"
+                variant={"outline"}
+                text="Login with Github"
+                icon={<Github />}
+              />
             </form>
             <form>
-              <Button className="w-full" variant={"outline"}>
-                <Google className="size-4" />
-                Login with Google
-              </Button>
+              <GeneralSubmitButton
+                width="w-full"
+                variant={"outline"}
+                text="Login with Google"
+                icon={<Google />}
+              />
             </form>
           </div>
         </CardContent>
