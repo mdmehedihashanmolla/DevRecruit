@@ -11,6 +11,7 @@ import { redirect } from "next/navigation";
 import ArcJetLogo from "@/public/arcjet.jpg";
 import InngestLogo from "@/public/inngest-locale.png";
 import Image from "next/image";
+import { CreateJobForm } from "@/components/forms/CreateJobForm";
 const companies = [
   { id: 0, name: "ArcJet", logo: ArcJetLogo },
   { id: 1, name: "Inngest", logo: InngestLogo },
@@ -72,11 +73,7 @@ async function getCompany(userId: string) {
 export default function PostJobPage() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-5">
-      <Card className="col-span-1 lg:col-span-2">
-        <CardHeader>
-          <CardTitle>Hey this is form</CardTitle>
-        </CardHeader>
-      </Card>
+      <CreateJobForm/>
       <div className="col-span-1">
         <CardHeader className="text-xl">
           <CardTitle>Trusted by Industry Leader</CardTitle>
