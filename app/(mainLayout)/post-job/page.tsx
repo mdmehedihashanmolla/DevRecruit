@@ -12,6 +12,7 @@ import ArcJetLogo from "@/public/arcjet.jpg";
 import InngestLogo from "@/public/inngest-locale.png";
 import Image from "next/image";
 import { CreateJobForm } from "@/components/forms/CreateJobForm";
+import { requireUser } from "@/app/utils/requireUser";
 const companies = [
   { id: 0, name: "ArcJet", logo: ArcJetLogo },
   { id: 1, name: "Inngest", logo: InngestLogo },
@@ -70,10 +71,19 @@ async function getCompany(userId: string) {
   return data;
 }
 
-export default function PostJobPage() {
+export default async function PostJobPage() {
+  const session = await requireUser();
+  const data = await getCompany(session.id as string);
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-5">
-      <CreateJobForm/>
+      <CreateJobForm
+        companyAbout={data.about}
+        companyLocation={data.location}
+        companyLogo={data.logo}
+        companyName={data.name}
+        companyXAccount={data.xAccount}
+        companyWebsite={data.website}
+      />
       <div className="col-span-1">
         <CardHeader className="text-xl">
           <CardTitle>Trusted by Industry Leader</CardTitle>
