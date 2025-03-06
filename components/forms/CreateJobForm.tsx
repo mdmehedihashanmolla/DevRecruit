@@ -44,6 +44,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { Textarea } from "../ui/textarea";
 import { JobListingDurationSelector } from "../general/JobListingDurationSelector";
+import { createJob } from "@/app/actions";
 
 export function CreateJobForm({
   companyAbout,
@@ -57,18 +58,18 @@ export function CreateJobForm({
     resolver: zodResolver(jobSchema),
     defaultValues: {
       benefits: [],
-      companyDescription: "",
-      companyLocation: "",
-      companyName: "",
-      companyWebsite: "",
-      companyXAccount: "",
+      companyDescription: companyAbout,
+      companyLocation: companyLocation,
+      companyName: companyName,
+      companyWebsite: companyWebsite,
+      companyXAccount: companyXAccount || "",
       employmentType: "",
       jobDescription: "",
       jobTitle: "",
       location: "",
       salaryFrom: 0,
       salaryTo: 0,
-      companyLogo: "",
+      companyLogo: companyLogo,
       listingDuration: 30,
     },
   });
