@@ -23,7 +23,6 @@ const aj = arcjet
 export async function createCompany(data: z.infer<typeof companySchema>) {
   const session = await requireUser();
   const req = await request();
-  // Call Arcjet protect
   const decision = await aj.protect(req);
 
   if (decision.isDenied()) {
@@ -89,9 +88,12 @@ export async function createJob(data: z.infer<typeof jobSchema>) {
 
   const decision = await aj.protect(req);
 
-  if (!decision.isDenied()) {
+  if (decision.isDenied()) {  // Only throw error if explicitly denied
+    console.log("User is explicitly denied from posting a job.");
     throw new Error("Forbidden");
-  }
+}
+
+  
 
   const validatedData = jobSchema.parse(data);
   const company = await prisma.company.findUnique({
@@ -106,7 +108,7 @@ export async function createJob(data: z.infer<typeof jobSchema>) {
     return redirect("/");
   }
 
-  const jobPost = await prisma.jobPost.create({
+  await prisma.jobPost.create({
     data: {
       companyId: company.id,
       jobDescription: validatedData.jobDescription,

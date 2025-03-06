@@ -35,7 +35,6 @@ import {
   SelectValue,
 } from "../ui/select";
 import { SalaryRangeSelector } from "../general/SalaryRangeSelector";
-import { JobDescriptionEditor } from "../richTextEditor/JobDescriptionEditor";
 import BenefitsSelector from "../general/BenefitsSelector";
 import { Button } from "../ui/button";
 import { XIcon } from "lucide-react";
@@ -45,6 +44,7 @@ import { useState } from "react";
 import { Textarea } from "../ui/textarea";
 import { JobListingDurationSelector } from "../general/JobListingDurationSelector";
 import { createJob } from "@/app/actions";
+import {JobDescriptionEditor} from "../richTextEditor/JobDescriptionEditor";
 
 export function CreateJobForm({
   companyAbout,

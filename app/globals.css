@@ -2,10 +2,23 @@
 @import "uploadthing/tw/v4";
 @source "../node_modules/@uploadthing/react/dist"; /** <-- depends on your project structure */
 
-
 @plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
+.prose h1 {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.prose h2 {
+  font-size: 1.75rem;
+  font-weight: bold;
+}
+
+.prose h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
 
 :root {
   --background: oklch(1 0 0);

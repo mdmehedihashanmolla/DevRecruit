@@ -27,14 +27,17 @@ import { Button } from "../ui/button";
 interface iAppProps {
   editor: Editor | null;
 }
+
 export function MenuBar({ editor }: iAppProps) {
   if (!editor) {
     return null;
   }
+
   return (
-    <div className="border rounde-t-lg p-2 bg-card flex flex-wrap gap-1 items-center">
+    <div className="border rounded-t-lg p-2 bg-card flex flex-wrap gap-1 items-center">
       <TooltipProvider>
         <div className="flex flex-wrap gap-1">
+          {/* Bold */}
           <Tooltip>
             <TooltipTrigger asChild>
               <Toggle
@@ -47,12 +50,13 @@ export function MenuBar({ editor }: iAppProps) {
                   editor.isActive("bold") && "bg-muted text-muted-foreground"
                 )}
               >
-                <Bold />
+                <Bold className="h-4 w-4" />
               </Toggle>
             </TooltipTrigger>
             <TooltipContent>Bold</TooltipContent>
           </Tooltip>
 
+          {/* Italic */}
           <Tooltip>
             <TooltipTrigger asChild>
               <Toggle
@@ -65,11 +69,13 @@ export function MenuBar({ editor }: iAppProps) {
                   editor.isActive("italic") && "bg-muted text-muted-foreground"
                 )}
               >
-                <Italic />
+                <Italic className="h-4 w-4" />
               </Toggle>
             </TooltipTrigger>
             <TooltipContent>Italic</TooltipContent>
           </Tooltip>
+
+          {/* Strike */}
           <Tooltip>
             <TooltipTrigger asChild>
               <Toggle
@@ -82,11 +88,13 @@ export function MenuBar({ editor }: iAppProps) {
                   editor.isActive("strike") && "bg-muted text-muted-foreground"
                 )}
               >
-                <Strikethrough />
+                <Strikethrough className="h-4 w-4" />
               </Toggle>
             </TooltipTrigger>
             <TooltipContent>Strike</TooltipContent>
           </Tooltip>
+
+          {/* Heading 1 */}
           <Tooltip>
             <TooltipTrigger asChild>
               <Toggle
@@ -100,12 +108,13 @@ export function MenuBar({ editor }: iAppProps) {
                     "bg-muted text-muted-foreground"
                 )}
               >
-                <Heading1 />
+                <Heading1 className="h-4 w-4" />
               </Toggle>
             </TooltipTrigger>
             <TooltipContent>Heading 1</TooltipContent>
           </Tooltip>
 
+          {/* Heading 2 */}
           <Tooltip>
             <TooltipTrigger asChild>
               <Toggle
@@ -124,6 +133,8 @@ export function MenuBar({ editor }: iAppProps) {
             </TooltipTrigger>
             <TooltipContent>Heading 2</TooltipContent>
           </Tooltip>
+
+          {/* Heading 3 */}
           <Tooltip>
             <TooltipTrigger asChild>
               <Toggle
@@ -142,6 +153,7 @@ export function MenuBar({ editor }: iAppProps) {
             </TooltipTrigger>
             <TooltipContent>Heading 3</TooltipContent>
           </Tooltip>
+          {/* Bullet List */}
           <Tooltip>
             <TooltipTrigger asChild>
               <Toggle
@@ -160,6 +172,8 @@ export function MenuBar({ editor }: iAppProps) {
             </TooltipTrigger>
             <TooltipContent>Bullet List</TooltipContent>
           </Tooltip>
+
+          {/* Ordered List */}
           <Tooltip>
             <TooltipTrigger asChild>
               <Toggle
@@ -179,6 +193,8 @@ export function MenuBar({ editor }: iAppProps) {
             <TooltipContent>Ordered List</TooltipContent>
           </Tooltip>
         </div>
+
+        {/* Text Alignment */}
         <div className="w-px h-6 bg-border mx-2" />
         <div className="flex flex-wrap gap-1">
           <Tooltip>
@@ -199,6 +215,7 @@ export function MenuBar({ editor }: iAppProps) {
             </TooltipTrigger>
             <TooltipContent>Align Left</TooltipContent>
           </Tooltip>
+
           <Tooltip>
             <TooltipTrigger asChild>
               <Toggle
@@ -237,9 +254,11 @@ export function MenuBar({ editor }: iAppProps) {
             <TooltipContent>Align Right</TooltipContent>
           </Tooltip>
         </div>
-        <div className="w-px h-6 bg-border mx-2"/>
+
+        {/* Undo/Redo */}
+        <div className="w-px h-6 bg-border mx-2" />
         <div className="flex flex-wrap gap-1">
-        <Tooltip>
+          <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 size="sm"
@@ -268,7 +287,6 @@ export function MenuBar({ editor }: iAppProps) {
             </TooltipTrigger>
             <TooltipContent>Redo</TooltipContent>
           </Tooltip>
-
         </div>
       </TooltipProvider>
     </div>
