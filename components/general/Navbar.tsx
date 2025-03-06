@@ -4,6 +4,7 @@ import Logo from "@/public/logo.png";
 import { Button, buttonVariants } from "../ui/button";
 import { ThemeToggle } from "./ThemeToggle";
 import { auth, signOut } from "@/app/utils/auth";
+import { UserDropdown } from "./UserDropDown";
 
 export async function Navbar() {
   const session = await auth();
@@ -16,17 +17,27 @@ export async function Navbar() {
           Dev<span className="text-purple-500">Recruit</span>
         </h1>
       </Link>
-      <div className="flex items-center gap-4">
+
+      {/* Desktop Navigation */}
+
+      <div className="hidden md:flex items-center gap-5">
         <ThemeToggle />
+        <Link
+          className={buttonVariants({
+            size: "lg",
+            className: "bg-purple-500 hover:bg-purple-600",
+          })}
+          href="/post-job"
+        >
+          Post Job
+        </Link>
+
         {session?.user ? (
-          <form
-            action={async () => {
-              "use server";
-              await signOut({ redirectTo: "/" });
-            }}
-          >
-            <Button className="bg-purple-500">Logout</Button>
-          </form>
+          <UserDropdown
+            email={session.user.email as string}
+            image={session.user.image as string}
+            name={session.user.name as string}
+          />
         ) : (
           <Link
             href="/login"
