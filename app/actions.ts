@@ -88,7 +88,7 @@ export async function createJob(data: z.infer<typeof jobSchema>) {
 
   const decision = await aj.protect(req);
 
-  if (decision.isDenied()) {  // Only throw error if explicitly denied
+  if (decision.isDenied()) {  
     console.log("User is explicitly denied from posting a job.");
     throw new Error("Forbidden");
 }
