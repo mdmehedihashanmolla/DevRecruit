@@ -166,13 +166,16 @@ export async function createJob(data: z.infer<typeof jobSchema>) {
               "https://mxzhdqbvkk.ufs.sh/f/27yV7G3eR6LDJbeu2YaLS0CmVxXZJhPtjfwDlToAG6MaB2kd",
             ],
           },
-          currency:'USD',
+          currency: "USD",
           unit_amount: pricingTier.price * 100,
-
         },
+        quantity: 1,
       },
     ],
+    mode: "payment",
+    success_url: `${process.env.NEXT_PUBLIC_URL}/payment/success`,
+    cancel_url: `${process.env.NEXT_PUBLIC_URL}/payment/cancel`,
   });
 
-  return redirect("/");
+  return redirect(session.url as string);
 }
