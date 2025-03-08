@@ -24,6 +24,11 @@ export async function POST(req: Request) {
   const session = event.data.object as Stripe.Checkout.Session;
   if (event.type == "checkout.session.completed") {
     const customerId = session.customer;
+    const jobId = session.metadata?.jobId;
+
+    if (!jobId) {
+      return new Response("No Job id found", { status: 400 });
+    }
 
     const company = await prisma.user.findUnique({
       where: {
@@ -37,6 +42,9 @@ export async function POST(req: Request) {
         },
       },
     });
+    if (!company) {
+      return new Response("No company found for uer", { status: 400 });
+    }
 
     await prisma.jobPost.update({
       where: {
