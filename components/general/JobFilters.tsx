@@ -19,7 +19,7 @@ const jobTypes = ["full-time", "part-time", "contract", "internship"];
 
 export function JobFilter() {
   return (
-    <Card className="w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto bg-background shadow-sm dark:shadow-none dark:border dark:border-gray-700">
+    <Card className="w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto bg-background shadow-sm dark:shadow-none dark:border dark:border-gray-700 h-fit">
       <CardHeader className="flex justify-between items-center flex-row p-4 sm:p-6 bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-800 dark:to-indigo-800">
         <CardTitle className="text-xl sm:text-2xl font-semibold text-white dark:text-purple-100">
           Filters
