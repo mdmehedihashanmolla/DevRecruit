@@ -7,6 +7,8 @@ import { prisma } from "./utils/db";
 import { redirect } from "next/navigation";
 import arcjet, { detectBot, shield } from "./utils/arcjet";
 import { request } from "@arcjet/next";
+import { stripe } from "./utils/stripe";
+import { jobListingDurationPricing } from "./utils/pricingTiers";
 const aj = arcjet
   .withRule(
     shield({
@@ -88,12 +90,10 @@ export async function createJob(data: z.infer<typeof jobSchema>) {
 
   const decision = await aj.protect(req);
 
-  if (decision.isDenied()) {  
+  if (decision.isDenied()) {
     console.log("User is explicitly denied from posting a job.");
     throw new Error("Forbidden");
-}
-
-  
+  }
 
   const validatedData = jobSchema.parse(data);
   const company = await prisma.company.findUnique({
@@ -102,10 +102,34 @@ export async function createJob(data: z.infer<typeof jobSchema>) {
     },
     select: {
       id: true,
+      user: {
+        select: {
+          stripeCustomerId: true,
+        },
+      },
     },
   });
   if (!company?.id) {
     return redirect("/");
+  }
+
+  let stripeCustomerId = company.user.stripeCustomerId;
+
+  if (!stripeCustomerId) {
+    const customer = await stripe.customers.create({
+      email: user.email as string,
+      name: user.name as string,
+    });
+    stripeCustomerId = customer.id;
+
+    await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        stripeCustomerId: customer.id,
+      },
+    });
   }
 
   await prisma.jobPost.create({
@@ -121,5 +145,34 @@ export async function createJob(data: z.infer<typeof jobSchema>) {
       benefits: validatedData.benefits,
     },
   });
+
+  const pricingTier = jobListingDurationPricing.find(
+    (tier) => tier.days === validatedData.listingDuration
+  );
+
+  if (!pricingTier) {
+    throw new Error("Invalid Listing duration selected");
+  }
+
+  const session = await stripe.checkout.sessions.create({
+    customer: stripeCustomerId,
+    line_items: [
+      {
+        price_data: {
+          product_data: {
+            name: `Job Posting |- ${pricingTier.days} Days`,
+            description: pricingTier.description,
+            images: [
+              "https://mxzhdqbvkk.ufs.sh/f/27yV7G3eR6LDJbeu2YaLS0CmVxXZJhPtjfwDlToAG6MaB2kd",
+            ],
+          },
+          currency:'USD',
+          unit_amount: pricingTier.price * 100,
+
+        },
+      },
+    ],
+  });
+
   return redirect("/");
 }
