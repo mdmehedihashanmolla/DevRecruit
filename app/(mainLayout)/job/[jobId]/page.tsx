@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Heart } from "lucide-react";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 
 async function getJob(jobId: string) {
@@ -132,6 +133,46 @@ export default async function JobIdPage({ params }: { params: Params }) {
                   year: "numeric",
                 })}
               </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-muted-foreground">Posted on</span>
+
+              <span className="text-sm">
+                {data.createdAt.toLocaleDateString("en-Us", {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-muted-foreground">
+                Employment Type
+              </span>
+
+              <span className="text-sm">{data.employmentType}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-muted-foreground">Location</span>
+
+              <span className="text-sm">
+                {locationFlag && <span className="mr-1">{locationFlag}</span>}
+
+                {data.location}
+              </span>
+            </div>
+          </div>
+        </Card>
+        <Card>
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <Image
+                src={"Company logo"}
+                alt="Company Logo"
+                width={48}
+                height={48}
+                className="rounded-full size-12"
+              />
             </div>
           </div>
         </Card>
