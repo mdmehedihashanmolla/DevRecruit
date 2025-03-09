@@ -167,7 +167,7 @@ export default async function JobIdPage({ params }: { params: Params }) {
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <Image
-                src={"Company logo"}
+                src={data.company.logo}
                 alt="Company Logo"
                 width={48}
                 height={48}
