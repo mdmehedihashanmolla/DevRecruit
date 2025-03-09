@@ -1,4 +1,5 @@
-import arcjet, { detectBot, fixedWindow } from "@/app/utils/arcjet";
+import arcjet, { detectBot, tokenBucket } from "@/app/utils/arcjet";
+import { auth } from "@/app/utils/auth";
 import { getFlagEmoji } from "@/app/utils/countriesList";
 import { prisma } from "@/app/utils/db";
 import { benefits } from "@/app/utils/listOfBenefits";
@@ -12,20 +13,34 @@ import { Heart } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
-const aj = arcjet
-  .withRule(
-    detectBot({
-      mode: "LIVE",
-      allow: ["CATEGORY:SEARCH_ENGINE", "CATEGORY:PREVIEW"],
-    })
-  )
-  .withRule(
-    fixedWindow({
-      mode: "LIVE",
-      max: 10,
-      window: "60s",
-    })
-  );
+const aj = arcjet.withRule(
+  detectBot({
+    mode: "LIVE",
+    allow: ["CATEGORY:SEARCH_ENGINE", "CATEGORY:PREVIEW"],
+  })
+);
+
+function getClient(session: boolean) {
+  if (session) {
+    return aj.withRule(
+      tokenBucket({
+        mode: "DRY_RUN",
+        capacity: 100,
+        interval: 60,
+        refillRate: 30,
+      })
+    );
+  } else {
+    return aj.withRule(
+      tokenBucket({
+        mode: "DRY_RUN",
+        capacity: 100,
+        interval: 60,
+        refillRate: 10,
+      })
+    );
+  }
+}
 
 async function getJob(jobId: string) {
   const jobData = await prisma.jobPost.findUnique({
@@ -59,8 +74,10 @@ async function getJob(jobId: string) {
 type Params = Promise<{ jobId: string }>;
 export default async function JobIdPage({ params }: { params: Params }) {
   const { jobId } = await params;
+  const session = await auth();
   const req = await request();
-  const decision = await aj.protect(req);
+  const decision = await getClient(!!session).protect(req, { requested: 10 });
+
   const data = await getJob(jobId);
 
   if (decision.isDenied()) {
