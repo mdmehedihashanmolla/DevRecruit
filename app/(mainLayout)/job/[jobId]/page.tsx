@@ -1,3 +1,4 @@
+import arcjet, { detectBot, fixedWindow } from "@/app/utils/arcjet";
 import { getFlagEmoji } from "@/app/utils/countriesList";
 import { prisma } from "@/app/utils/db";
 import { benefits } from "@/app/utils/listOfBenefits";
@@ -6,9 +7,25 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { request } from "@arcjet/next";
 import { Heart } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+
+const aj = arcjet
+  .withRule(
+    detectBot({
+      mode: "LIVE",
+      allow: ["CATEGORY:SEARCH_ENGINE", "CATEGORY:PREVIEW"],
+    })
+  )
+  .withRule(
+    fixedWindow({
+      mode: "LIVE",
+      max: 10,
+      window: "60s",
+    })
+  );
 
 async function getJob(jobId: string) {
   const jobData = await prisma.jobPost.findUnique({
@@ -42,7 +59,13 @@ async function getJob(jobId: string) {
 type Params = Promise<{ jobId: string }>;
 export default async function JobIdPage({ params }: { params: Params }) {
   const { jobId } = await params;
+  const req = await request();
+  const decision = await aj.protect(req);
   const data = await getJob(jobId);
+
+  if (decision.isDenied()) {
+    throw new Error("Forbidden");
+  }
   const locationFlag = getFlagEmoji(data.location);
   return (
     <div className="grid lg:grid-cols-3 gap-8">
@@ -163,7 +186,7 @@ export default async function JobIdPage({ params }: { params: Params }) {
             </div>
           </div>
         </Card>
-        <Card>
+        <Card className="p-6">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <Image
@@ -173,6 +196,12 @@ export default async function JobIdPage({ params }: { params: Params }) {
                 height={48}
                 className="rounded-full size-12"
               />
+              <div className="flex  flex-col">
+                <h3 className="text-semibold">{data.company.name}</h3>
+                <p className="text-sm text-muted-foreground line-clamp-3">
+                  {data.company.about}
+                </p>
+              </div>
             </div>
           </div>
         </Card>
