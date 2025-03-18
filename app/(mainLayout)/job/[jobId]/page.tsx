@@ -192,7 +192,9 @@ export default async function JobIdPage({ params }: { params: Params }) {
                 DevRecruit. This helps us grow!
               </p>
             </div>
-            <Button className="w-full bg-purple-500">Apply now</Button>
+            <Link href="/apply">
+              <Button className="w-full bg-purple-500">Apply now</Button>
+            </Link>
           </div>
         </Card>
         {/* Job Details Card */}
