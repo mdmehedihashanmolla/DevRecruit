@@ -1,5 +1,6 @@
 import { JobFilter } from "@/components/general/JobFilters";
 import { JobListings } from "@/components/general/JobListings";
+import JobListingsLoading from "@/components/general/JobListingsLoading";
 import { Suspense } from "react";
 
 export default function Home() {
@@ -8,7 +9,7 @@ export default function Home() {
       <JobFilter />
 
       <div className="col-span-2 flex flex-col gap-6">
-        <Suspense fallback={<p>Loading...</p>}>
+        <Suspense fallback={<JobListingsLoading />}>
           <JobListings />
         </Suspense>
       </div>
