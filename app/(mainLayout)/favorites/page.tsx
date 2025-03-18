@@ -44,7 +44,7 @@ const FavoritesPage = async () => {
         title="No favorites found"
         description="You don't have any favorites yet."
         buttonText="Find a job"
-        href="/jobs"
+        href="/"
       />
     );
   }
