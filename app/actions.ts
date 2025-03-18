@@ -222,6 +222,20 @@ export async function updateJobPost(
 
   return redirect("/my-jobs");
 }
+export async function deleteJobPost(jobId: string) {
+  const user = await requireUser();
+
+  await prisma.jobPost.delete({
+    where: {
+      id: jobId,
+      company: {
+        userId: user.id,
+      },
+    },
+  });
+
+  return redirect("/my-jobs");
+}
 
 export async function saveJobPost(jobId: string) {
   const user = await requireUser();
