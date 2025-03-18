@@ -1,7 +1,6 @@
 import { JobFilter } from "@/components/general/JobFilters";
 import { JobListings } from "@/components/general/JobListings";
-import { Card } from "@/components/ui/card";
-import Image from "next/image";
+import { Suspense } from "react";
 
 export default function Home() {
   return (
@@ -9,7 +8,9 @@ export default function Home() {
       <JobFilter />
 
       <div className="col-span-2 flex flex-col gap-6">
-        <JobListings />
+        <Suspense fallback={<p>Loading...</p>}>
+          <JobListings />
+        </Suspense>
       </div>
     </div>
   );
