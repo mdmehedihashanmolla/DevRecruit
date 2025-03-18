@@ -1,10 +1,18 @@
 import { prisma } from "@/app/utils/db";
 import { requireUser } from "@/app/utils/requireUser";
 import { EditJobForm } from "@/components/forms/EditJobForm";
-import { notFound } from "next/navigation";
 
-async function getData(jobId: string, userId: string) {
-  const data = await prisma.jobPost.findUnique({
+import { notFound } from "next/navigation";
+import React from "react";
+
+async function getJobPost({
+  jobId,
+  userId,
+}: {
+  jobId: string;
+  userId: string;
+}) {
+  const jobPost = await prisma.jobPost.findUnique({
     where: {
       id: jobId,
       company: {
@@ -16,8 +24,8 @@ async function getData(jobId: string, userId: string) {
       id: true,
       jobTitle: true,
       jobDescription: true,
-      salaryFrom: true,
       salaryTo: true,
+      salaryFrom: true,
       location: true,
       employmentType: true,
       listingDuration: true,
@@ -33,20 +41,30 @@ async function getData(jobId: string, userId: string) {
       },
     },
   });
-  if (!data) {
+
+  if (!jobPost) {
     return notFound();
   }
-  return data;
+
+  return jobPost;
 }
 
 type Params = Promise<{ jobId: string }>;
-export default async function EditJobPage({ params }: { params: Params }) {
+
+const EditJobPage = async ({ params }: { params: Params }) => {
   const { jobId } = await params;
   const user = await requireUser();
-  const data = await getData(jobId, user.id as string);
+  const jobPost = await getJobPost({ jobId, userId: user.id as string });
+
+  if (!jobPost) {
+    return notFound();
+  }
+
   return (
-    <div>
-      <h1>Hi there</h1>
-    </div>
+    <>
+      <EditJobForm jobPost={jobPost} />
+    </>
   );
-}
+};
+
+export default EditJobPage;
